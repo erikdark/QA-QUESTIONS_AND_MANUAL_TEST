@@ -1,7 +1,7 @@
 const questions = [
     { question: "Что такое юнит-тестирование?", options: ["A. Тестирование отдельных модулей", "B. Тестирование интерфейсов", "C. Тестирование системы", "D. Тестирование нагрузки"], correct: 0 },
     { question: "Какой инструмент используется для функционального тестирования?", options: ["A. JUnit", "B. Selenium", "C. JMeter", "D. Postman"], correct: 1 },
-    { question: "Что такое регрессионное тестирование?", options: ["A. Тестирование производительности", "B. Тестирование безопасности", "C. Тестирование нового функционала", "D. Тестирование после изменений"], correct: 4 },
+    { question: "Что такое регрессионное тестирование?", options: ["A. Тестирование производительности", "B. Тестирование безопасности", "C. Тестирование нового функционала", "D. Тестирование после изменений"], correct: 3 },
     { question: "Какой метод используется для тестирования пользовательского интерфейса?", options: ["A. White Box Testing", "B. Black Box Testing", "C. Unit Testing", "D. System Testing"], correct: 1 },
     { question: "Что означает TDD?", options: ["A. Test Driven Development", "B. Test Design Development", "C. Testing During Development", "D. Test Data Development"], correct: 0 },
     { question: "Какой инструмент используется для нагрузочного тестирования?", options: ["A. Selenium", "B. JUnit", "C. JMeter", "D. Postman"], correct: 2 },
@@ -72,45 +72,49 @@ function submitAnswers() {
         const options = document.getElementsByName(`question-${index}`);
         options.forEach(option => {
             if (option.checked) {
-                userAnswers.push(parseInt(option.value));
+                userAnswers.push(parseInt(option.value, 10));
             }
         });
     });
 
-    if (userAnswers.length < 15) {
-        alert('Пожалуйста, ответьте на все вопросы.');
+    if (userAnswers.length < selectedQuestions.length) {
+        alert("Вы ответили не на все вопросы.");
         return;
     }
 
-    let correctAnswersCount = 0;
-    let incorrectAnswers = [];
+    checkAnswers();
+}
+
+function checkAnswers() {
+    let correctCount = 0;
+    const errors = [];
+
     selectedQuestions.forEach((q, index) => {
         if (userAnswers[index] === q.correct) {
-            correctAnswersCount++;
+            correctCount++;
         } else {
-            incorrectAnswers.push({ question: q.question, correct: q.options[q.correct], yourAnswer: q.options[userAnswers[index]] });
+            errors.push({ question: q.question, userAnswer: q.options[userAnswers[index]], correctAnswer: q.options[q.correct] });
         }
     });
 
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = `Вы ответили правильно на ${correctAnswersCount} из 15 вопросов.<br>`;
-    if (incorrectAnswers.length > 0) {
-        resultDiv.innerHTML += 'Ошибки:<br>';
-        incorrectAnswers.forEach(incorrect => {
-            resultDiv.innerHTML += `Вопрос: ${incorrect.question}<br>Ваш ответ: ${incorrect.yourAnswer}<br>Правильный ответ: ${incorrect.correct}<br><br>`;
+    const resultContainer = document.getElementById('result');
+    resultContainer.innerHTML = `Правильных ответов: ${correctCount} из ${selectedQuestions.length}`;
+    
+    if (correctCount < 15) {
+        const errorList = document.createElement('ul');
+        errors.forEach(error => {
+            const errorItem = document.createElement('li');
+            errorItem.innerHTML = `Вопрос: ${error.question}<br>Ваш ответ: ${error.userAnswer}<br>Правильный ответ: ${error.correctAnswer}`;
+            errorList.appendChild(errorItem);
         });
+        resultContainer.appendChild(errorList);
+    } else {
+        const practicalTestButton = document.createElement('button');
+        practicalTestButton.textContent = 'Начать практический тест';
+        practicalTestButton.onclick = () => alert('Практический тест начат!');
+        resultContainer.appendChild(practicalTestButton);
     }
-
-    if (correctAnswersCount >= 15) {
-        const startPracticalBtn = document.createElement('button');
-        startPracticalBtn.textContent = 'Начать практический тест';
-        startPracticalBtn.onclick = function() {
-            alert('Практический тест начат.');
-        };
-        resultDiv.appendChild(startPracticalBtn);
-    }
-
-    resultDiv.className = '';
 }
 
-window.onload = displayQuestions;
+document.addEventListener('DOMContentLoaded', displayQuestions);
+document.getElementById('submit').addEventListener('click', submitAnswers);
