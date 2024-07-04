@@ -113,8 +113,7 @@
         }
 
         .checkout-form input[type="text"],
-        .checkout-form input[type="email"],
-        .checkout-form input[type="tel"] {
+        .checkout-form input[type="email"] {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
@@ -140,10 +139,6 @@
 
         .checkout-form .policy {
             margin-top: 10px;
-        }
-
-        .checkout-form .policy input {
-            margin-right: 5px;
         }
 
         .error-message {
@@ -271,8 +266,9 @@
                     <div id="cartItems">
                         <!-- Содержимое корзины будет добавляться программно -->
                     </div>
-                    <button onclick="applyCoupon()">Применить купон</button>
-                    <span id="couponMessage" class="coupon-message"></span>
+                    <div>
+                        <p><strong>Общая сумма:</strong> $<span id="totalPrice">0</span></p>
+                    </div>
                     <button onclick="openCheckoutModal()">Оформить заказ</button>
                 </div>
             </div>
@@ -284,17 +280,21 @@
                 <div class="checkout-form">
                     <h2>Оформление заказа</h2>
                     <form id="orderForm" onsubmit="return validateForm()">
+                        <label for="name">Имя:</label>
+                        <input type="text" id="name" name="name" required><br><br>
+
+                        <label for="address">Адрес:</label>
+                        <input type="text" id="address" name="address" required><br><br>
+
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
-                        <span id="emailError" class="error-message"></span><br><br>
+                        <input type="email" id="email" name="email"><br><br>
 
                         <label for="phone">Телефон:</label>
-                        <input type="tel" id="phone" name="phone" required><br><br>
+                        <input type="tel" id="phone" name="phone"><br><br>
 
-                        <label for="policy">Согласен с политикой персональных данных:</label>
-                        <input type="checkbox" id="policy" name="policy" required>
-                        <span id="policyError" class="error-message"></span><br><br>
-                        
+                        <input type="checkbox" id="policy" name="policy">
+                        <label for="policy">Согласен с политикой персональных данных</label><br><br>
+
                         <button type="submit">Оформить заказ</button>
                     </form>
                     <div id="orderStatus"></div>
@@ -351,26 +351,19 @@
                 return;
             }
 
-            const discount = 0.1; // 10% скидка
-            document.getElementById('couponMessage').textContent = `Купон активирован: скидка ${discount * 100}%`;
+            // Текст сообщения о купоне
+            const couponMessage = document.createElement('p');
+            couponMessage.classList.add('coupon-message');
+            couponMessage.textContent = 'Купон активирован: скидка 10%';
+
+            const checkoutForm = document.getElementById('orderForm');
+            checkoutForm.appendChild(couponMessage);
         }
 
         function validateForm() {
             const form = document.getElementById('orderForm');
-            const email = form.email.value;
-            const policy = form.policy.checked;
-
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (!emailPattern.test(email)) {
-                // Ошибка №1: Некорректный email адрес.
-                return false;
-            }
-
-            if (!policy) {
-                // Ошибка №2: Необходимо согласиться с политикой персональных данных.
-                return false;
-            }
+            const name = form.name.value;
+            const address = form.address.value;
 
             const orderStatus = document.getElementById('orderStatus');
             orderStatus.textContent = "Вы успешно оформили заказ!";
@@ -379,6 +372,7 @@
 
         function openCartModal() {
             cartModal.style.display = 'block';
+            updateCartModal();
         }
 
         function closeCartModal() {
@@ -404,6 +398,7 @@
         function updateCartModal() {
             const cartItemsContainer = document.getElementById('cartItems');
             cartItemsContainer.innerHTML = '';
+            let totalPrice = 0;
 
             cartItems.forEach(productId => {
                 const itemDiv = document.createElement('div');
@@ -413,18 +408,44 @@
                 itemImg.src = 'https://placehold.jp/150x150.png';
                 itemImg.alt = `Товар ${productId}`;
 
-                const itemText = document.createElement('p');
-                itemText.textContent = `Товар ${productId}`;
+                const itemName = document.createElement('p');
+                itemName.textContent = `Товар ${productId}`;
+
+                const itemPrice = document.createElement('p');
+                itemPrice.textContent = `Цена: $${getProductPrice(productId)}`;
 
                 const removeBtn = document.createElement('button');
                 removeBtn.textContent = 'Удалить';
                 removeBtn.onclick = () => removeCartItem(productId);
 
                 itemDiv.appendChild(itemImg);
-                itemDiv.appendChild(itemText);
+                itemDiv.appendChild(itemName);
+                itemDiv.appendChild(itemPrice);
                 itemDiv.appendChild(removeBtn);
                 cartItemsContainer.appendChild(itemDiv);
+
+                totalPrice += getProductPrice(productId);
             });
+
+            const totalPriceElement = document.getElementById('totalPrice');
+            totalPriceElement.textContent = totalPrice;
+        }
+
+        function getProductPrice(productId) {
+            switch (productId) {
+                case 1:
+                    return 50;
+                case 2:
+                    return 30;
+                case 3:
+                    return 40;
+                case 4:
+                    return 25;
+                case 5:
+                    return 35;
+                default:
+                    return 0;
+            }
         }
 
         function showNotification() {
