@@ -115,9 +115,10 @@ function handleAllAnswersChecked() {
         startPracticeTestButton.textContent = 'Начать практический тест';
         startPracticeTestButton.id = 'startPracticeTestButton';
         startPracticeTestButton.addEventListener('click', () => {
-            // Действия при нажатии на кнопку "Начать практический тест"
-            // Здесь можете добавить свой код для начала практического теста
-            alert('Практический тест начался!');
+            // Случайный выбор одной из страниц
+            const pages = ['shop_1.html', 'shop_2.html', 'shop_3.html'];
+            const randomPage = pages[Math.floor(Math.random() * pages.length)];
+            window.location.href = randomPage; // Перенаправление на выбранную страницу
         });
 
         // Добавляем кнопку после контейнера с вопросами
@@ -125,6 +126,7 @@ function handleAllAnswersChecked() {
         resultContainer.appendChild(startPracticeTestButton);
     }
 }
+
 
 // В функции checkAnswers() добавляем вызов handleAllAnswersChecked() после подсчёта результатов
 function checkAnswers() {
