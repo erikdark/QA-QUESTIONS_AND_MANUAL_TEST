@@ -84,6 +84,21 @@ function checkAnswers() {
 
     const scoreContainer = document.getElementById('score');
     scoreContainer.textContent = `Правильных ответов: ${score} из ${selectedQuestions.length}`;
+
+    // Проверяем, если все ответы правильные, показываем кнопку для практического теста
+    if (score === selectedQuestions.length) {
+        const practicalTestButton = document.createElement('button');
+        practicalTestButton.textContent = 'Начать практический тест';
+        practicalTestButton.addEventListener('click', () => {
+            // Редирект на случайную страницу из трех вариантов
+            const randomPage = Math.floor(Math.random() * 3) + 1;
+            window.location.href = `shop_${randomPage}.html`;
+        });
+
+        const buttonContainer = document.getElementById('buttonContainer');
+        buttonContainer.innerHTML = ''; // Очистим содержимое контейнера перед добавлением кнопки
+        buttonContainer.appendChild(practicalTestButton);
+    }
 }
 
 // Используем кнопки для запуска функций
@@ -99,69 +114,3 @@ startButton.addEventListener('click', () => {
 checkButton.addEventListener('click', () => {
     checkAnswers();
 });
-
-// Функция, которая будет вызываться после проверки всех ответов
-function handleAllAnswersChecked() {
-    let allCorrect = true;
-    selectedQuestions.forEach((q, index) => {
-        const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
-        if (!selectedOption || parseInt(selectedOption.value, 10) !== q.correct) {
-            allCorrect = false;
-        }
-    });
-
-    if (allCorrect) {
-        const startPracticeTestButton = document.createElement('button');
-        startPracticeTestButton.textContent = 'Начать практический тест';
-        startPracticeTestButton.id = 'startPracticeTestButton';
-        startPracticeTestButton.addEventListener('click', () => {
-            // Случайный выбор одной из страниц
-            const pages = ['shop_1.html', 'shop_2.html', 'shop_3.html'];
-            const randomPage = pages[Math.floor(Math.random() * pages.length)];
-            window.location.href = randomPage; // Перенаправление на выбранную страницу
-        });
-
-        // Добавляем кнопку после контейнера с вопросами
-        const resultContainer = document.getElementById('result');
-        resultContainer.appendChild(startPracticeTestButton);
-    }
-}
-
-
-// В функции checkAnswers() добавляем вызов handleAllAnswersChecked() после подсчёта результатов
-function checkAnswers() {
-    let correctCount = 0;
-    const errors = [];
-
-    selectedQuestions.forEach((q, index) => {
-        const options = document.getElementsByName(`question-${index}`);
-        let answeredCorrectly = false;
-        options.forEach(option => {
-            if (option.checked && parseInt(option.value, 10) === q.correct) {
-                answeredCorrectly = true;
-            }
-        });
-
-        if (answeredCorrectly) {
-            correctCount++;
-        } else {
-            errors.push({ question: q.question, userAnswer: q.options[userAnswers[index]], correctAnswer: q.options[q.correct] });
-        }
-    });
-
-    const resultContainer = document.getElementById('result');
-    resultContainer.innerHTML = `Правильных ответов: ${correctCount} из ${selectedQuestions.length}`;
-
-    if (correctCount === selectedQuestions.length) {
-        handleAllAnswersChecked();
-    } else {
-        const errorList = document.createElement('ul');
-        errors.forEach(error => {
-            const errorItem = document.createElement('li');
-            errorItem.innerHTML = `Вопрос: ${error.question}<br>Ваш ответ: ${error.userAnswer}<br>Правильный ответ: ${error.correctAnswer}`;
-            errorList.appendChild(errorItem);
-        });
-        resultContainer.appendChild(errorList);
-    }
-}
-
