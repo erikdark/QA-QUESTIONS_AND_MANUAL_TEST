@@ -48,7 +48,7 @@ function displayQuestions() {
         
         const questionTitle = document.createElement('div');
         questionTitle.className = 'question';
-        questionTitle.textContent = ${index + 1}. ${q.question}; // Нумерация вопросов
+        questionTitle.textContent = `${index + 1}. ${q.question}`; // Нумерация вопросов
         questionDiv.appendChild(questionTitle);
         
         const optionsList = document.createElement('ul');
@@ -58,7 +58,7 @@ function displayQuestions() {
             const optionItem = document.createElement('li');
             const optionInput = document.createElement('input');
             optionInput.type = 'radio';
-            optionInput.name = question-${index};
+            optionInput.name = `question-${index}`;
             optionInput.value = optIndex; // Используем индекс начиная с 0 для значений
             optionItem.appendChild(optionInput);
             optionItem.appendChild(document.createTextNode(option));
@@ -73,7 +73,7 @@ function displayQuestions() {
 function checkAnswers() {
     let score = 0;
     selectedQuestions.forEach((q, index) => {
-        const selectedOption = document.querySelector(input[name="question-${index}"]:checked);
+        const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
         if (selectedOption) {
             const selectedValue = parseInt(selectedOption.value, 10); // Получаем выбранное значение как число
             if (selectedValue === q.correct) {
@@ -83,7 +83,7 @@ function checkAnswers() {
     });
 
     const scoreContainer = document.getElementById('score');
-    scoreContainer.textContent = Правильных ответов: ${score} из ${selectedQuestions.length};
+    scoreContainer.textContent = `Правильных ответов: ${score} из ${selectedQuestions.length}`;
 }
 
 // Используем кнопки для запуска функций
