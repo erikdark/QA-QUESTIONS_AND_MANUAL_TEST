@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Магазин - Тестовая страница 2</title>
+    <title>Магазин - Тестовая страница</title>
     <style>
         /* Стили для примера */
         body {
@@ -11,23 +11,14 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f3f3f3; /* Изменён цвет фона */
+            background-color: #f4f4f4;
         }
 
         header {
-            background-color: #333;
+            background-color: #ff3333; /* Красный цвет */
             color: #fff;
             text-align: center;
             padding: 1rem;
-            position: relative; /* Добавлено положение для звёздочки корзины */
-        }
-
-        header::after { /* Добавлена иконка корзины */
-            content: '★';
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 1.2rem;
         }
 
         main {
@@ -48,7 +39,7 @@
 
         .product-item {
             padding: 15px;
-            background-color: #f0f0f0;
+            background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 8px;
             text-align: center;
@@ -68,7 +59,6 @@
         .product-item p {
             color: #666;
             font-size: 0.9rem;
-            margin-bottom: 8px;
         }
 
         .product-item .price {
@@ -123,8 +113,7 @@
         }
 
         .checkout-form input[type="text"],
-        .checkout-form input[type="email"],
-        .checkout-form input[type="tel"] {
+        .checkout-form input[type="email"] {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
@@ -153,7 +142,6 @@
         }
 
         .error-message {
-            display: none; /* Скрыть сообщения об ошибках */
             color: red;
             font-size: 0.9rem;
             margin-top: 5px;
@@ -228,44 +216,44 @@
 
     <main>
         <section class="product">
-            <div class="product-item" id="product6">
-                <img src="https://placehold.jp/150x150.png" alt="Товар 6">
-                <h3>Товар 6</h3>
-                <p>Описание товара 6</p>
-                <p class="price">$60</p>
-                <button onclick="addToCart(6)">Добавить в корзину</button>
+            <div class="product-item" id="product1">
+                <img src="https://placehold.jp/150x150.png" alt="Товар 1">
+                <h3>Товар 1</h3>
+                <p>Описание товара 1</p>
+                <p class="price">$50</p>
+                <button onclick="addToCart(1)">Добавить в корзину</button>
             </div>
 
-            <div class="product-item" id="product7">
-                <img src="https://placehold.jp/150x150.png" alt="Товар 7">
-                <h3>Товар 7</h3>
-                <p>Описание товара 7</p>
-                <p class="price">$70</p>
-                <button onclick="addToCart(7)">Добавить в корзину</button>
+            <div class="product-item" id="product2">
+                <img src="https://placehold.jp/150x150.png" alt="Товар 2">
+                <h3>Товар 2</h3>
+                <p>Описание товара 2</p>
+                <p class="price">$30</p>
+                <button onclick="addToCart(2)">Добавить в корзину</button>
             </div>
 
-            <div class="product-item" id="product8">
-                <img src="https://placehold.jp/150x150.png" alt="Товар 8">
-                <h3>Товар 8</h3>
-                <p>Описание товара 8</p>
-                <p class="price">$80</p>
-                <button onclick="addToCart(8)">Добавить в корзину</button>
+            <div class="product-item" id="product3">
+                <img src="https://placehold.jp/150x150.png" alt="Товар 3">
+                <h3>Товар 3</h3>
+                <p>Описание товара 3</p>
+                <p class="price">$40</p>
+                <button onclick="addToCart(3)">Добавить в корзину</button>
             </div>
 
-            <div class="product-item" id="product9">
-                <img src="https://placehold.jp/150x150.png" alt="Товар 9">
-                <h3>Товар 9</h3>
-                <p>Описание товара 9</p>
-                <p class="price">$90</p>
-                <button onclick="addToCart(9)">Добавить в корзину</button>
+            <div class="product-item" id="product4">
+                <img src="https://placehold.jp/150x150.png" alt="Товар 4">
+                <h3>Товар 4</h3>
+                <p>Описание товара 4</p>
+                <p class="price">$25</p>
+                <button onclick="addToCart(4)">Добавить в корзину</button>
             </div>
 
-            <div class="product-item" id="product10">
-                <img src="https://placehold.jp/150x150.png" alt="Товар 10">
-                <h3>Товар 10</h3>
-                <p>Описание товара 10</p>
-                <p class="price">$100</p>
-                <button onclick="addToCart(10)">Добавить в корзину</button>
+            <div class="product-item" id="product5">
+                <img src="https://placehold.jp/150x150.png" alt="Товар 5">
+                <h3>Товар 5</h3>
+                <p>Описание товара 5</p>
+                <p class="price">$35</p>
+                <button onclick="addToCart(5)">Добавить в корзину</button>
             </div>
         </section>
 
@@ -292,106 +280,136 @@
                 <span class="close" onclick="closeCheckoutModal()">&times;</span>
                 <div class="checkout-form">
                     <h2>Оформление заказа</h2>
-                    <form onsubmit="return validateForm()">
+                    <form id="orderForm" onsubmit="return validateForm()">
                         <label for="name">Имя:</label>
-                        <input type="text" id="name" name="name" required>
+                        <input type="text" id="name" name="name" required><br>
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" required><br>
                         <label for="phone">Телефон:</label>
-                        <input type="tel" id="phone" name="phone">
-                        <button type="submit">Отправить</button>
+                        <input type="text" id="phone" name="phone"><br>
+                        <input type="checkbox" id="agree" name="agree" checked>
+                        <label for="agree">Согласен с условиями</label><br>
+                        <button type="submit">Оформить заказ</button>
                     </form>
-                    <div class="policy">
-                        <input type="checkbox" id="policy" required>
-                        <label for="policy">Я согласен с политикой конфиденциальности</label>
-                    </div>
-                    <p class="error-message" id="formError">Все поля должны быть заполнены!</p>
                 </div>
             </div>
         </div>
 
-        <!-- Уведомление -->
-        <div id="notification" class="notification"></div>
+        <div class="notification" id="notification"></div>
     </main>
 
     <script>
         // Модальные окна
+        const cartModal = document.getElementById('cartModal');
+        const checkoutModal = document.getElementById('checkoutModal');
+        const notification = document.getElementById('notification');
+
         function openCartModal() {
-            document.getElementById('cartModal').style.display = 'block';
+            cartModal.style.display = 'block';
         }
 
         function closeCartModal() {
-            document.getElementById('cartModal').style.display = 'none';
+            cartModal.style.display = 'none';
         }
 
         function openCheckoutModal() {
-            document.getElementById('checkoutModal').style.display = 'block';
+            checkoutModal.style.display = 'block';
         }
 
         function closeCheckoutModal() {
-            document.getElementById('checkoutModal').style.display = 'none';
+            checkoutModal.style.display = 'none';
         }
 
         // Корзина
         let cart = [];
 
         function addToCart(productId) {
-            if (productId === 5) {
-                alert('Ошибка: Товар 5 не добавлен в корзину.');
+            if (productId === 2) {
+                showErrorNotification("Товар номер 2 не добавляется в корзину");
                 return;
             }
-
-            // В реальной жизни здесь было бы добавление товара в корзину
+            
             cart.push(productId);
             updateCart();
+            showSuccessNotification(`Товар ${productId} добавлен в корзину`);
         }
 
-        function removeCartItem(index) {
-            if (index === 2) {
-                alert('Ошибка: Товар 3 не удалён из корзины.');
-                return;
+        function removeFromCart(productId) {
+            const index = cart.indexOf(productId);
+            if (index !== -1) {
+                cart.splice(index, 1);
+                updateCart();
+                showSuccessNotification(`Товар ${productId} удален из корзины`);
+            } else {
+                showErrorNotification("Товар номер 5 не удаляется из корзины");
             }
-
-            cart.splice(index, 1);
-            updateCart();
         }
 
         function updateCart() {
-            let cartItemsDiv = document.getElementById('cartItems');
-            cartItemsDiv.innerHTML = '';
-
+            const cartItemsElement = document.getElementById('cartItems');
+            cartItemsElement.innerHTML = '';
             let totalPrice = 0;
+
             cart.forEach(productId => {
-                let productDiv = document.createElement('div');
-                productDiv.classList.add('cart-item');
+                const product = document.createElement('div');
+                product.classList.add('cart-item');
 
-                let productName = `Товар ${productId}`;
-                let productPrice = 10 * productId; // Это временная цена для примера
-                totalPrice += productPrice;
+                const productName = document.createElement('p');
+                productName.textContent = `Товар ${productId}`;
+                product.appendChild(productName);
 
-                productDiv.innerHTML = `
-                    <img src="https://placehold.jp/80x80.png" alt="${productName}">
-                    <p>${productName}</p>
-                    <p>$${productPrice}</p>
-                    <button onclick="removeCartItem(${cart.indexOf(productId)})">Удалить</button>
-                `;
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Удалить';
+                removeButton.onclick = () => removeFromCart(productId);
+                product.appendChild(removeButton);
 
-                cartItemsDiv.appendChild(productDiv);
+                cartItemsElement.appendChild(product);
+
+                // Простой пример цен для демонстрации
+                totalPrice += 30; // Предположим, каждый товар стоит $30
             });
 
-            document.getElementById('totalPrice').textContent = totalPrice;
+            const totalPriceElement = document.getElementById('totalPrice');
+            totalPriceElement.textContent = totalPrice.toString();
         }
 
-        // Купон
+        // Промокод
         function applyCoupon() {
-            alert('Применена 50% скидка с пометкой, что скидка составляет 50%, но на деле она 10%.');
-            document.getElementById('couponMessage').textContent = 'Применена 50% скидка!';
+            // Предполагаем, что промокод дает 50% скидку, но на деле будет 25%
+            showCouponMessage("Применена 50% скидка!");
+        }
+
+        function showCouponMessage(message) {
+            const couponMessage = document.getElementById('couponMessage');
+            couponMessage.textContent = message;
+        }
+
+        // Уведомления
+        function showSuccessNotification(message) {
+            notification.textContent = message;
+            notification.style.backgroundColor = 'green';
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function showErrorNotification(message) {
+            notification.textContent = message;
+            notification.style.backgroundColor = 'red';
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
 
         // Валидация формы
         function validateForm() {
-            // Убрана валидация, всегда возвращаем true
-            return true;
+            // Просто выводим сообщение об успешной отправке, не проверяем поля
+            showSuccessNotification("Вы успешно оформили заказ!");
+            return false; // Чтобы форма не отправлялась
         }
     </script>
 </body>
