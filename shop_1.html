@@ -271,6 +271,8 @@
                         <p><strong>Общая сумма:</strong> $<span id="totalPrice">0</span></p>
                     </div>
                     <button onclick="openCheckoutModal()">Оформить заказ</button>
+                    <button onclick="applyCoupon()">Применить купон</button>
+                    <p class="coupon-message" id="couponMessage"></p>
                 </div>
             </div>
         </div>
@@ -297,8 +299,6 @@
                         <label for="policy">Согласен с политикой персональных данных</label><br><br>
 
                         <button type="submit">Оформить заказ</button>
-                        <button type="button" onclick="applyCoupon()">Применить купон</button>
-                        <p class="coupon-message" id="couponMessage"></p>
                     </form>
                     <div id="orderStatus"></div>
                 </div>
@@ -307,7 +307,6 @@
 
         <div class="notification" id="addToCartNotification">
             Товар добавлен в корзину
-            <button onclick="openCartModal()">Корзина</button>
         </div>
     </main>
 
