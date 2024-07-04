@@ -99,3 +99,67 @@ startButton.addEventListener('click', () => {
 checkButton.addEventListener('click', () => {
     checkAnswers();
 });
+
+// Функция, которая будет вызываться после проверки всех ответов
+function handleAllAnswersChecked() {
+    let allCorrect = true;
+    selectedQuestions.forEach((q, index) => {
+        const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
+        if (!selectedOption || parseInt(selectedOption.value, 10) !== q.correct) {
+            allCorrect = false;
+        }
+    });
+
+    if (allCorrect) {
+        const startPracticeTestButton = document.createElement('button');
+        startPracticeTestButton.textContent = 'Начать практический тест';
+        startPracticeTestButton.id = 'startPracticeTestButton';
+        startPracticeTestButton.addEventListener('click', () => {
+            // Действия при нажатии на кнопку "Начать практический тест"
+            // Здесь можете добавить свой код для начала практического теста
+            alert('Практический тест начался!');
+        });
+
+        // Добавляем кнопку после контейнера с вопросами
+        const resultContainer = document.getElementById('result');
+        resultContainer.appendChild(startPracticeTestButton);
+    }
+}
+
+// В функции checkAnswers() добавляем вызов handleAllAnswersChecked() после подсчёта результатов
+function checkAnswers() {
+    let correctCount = 0;
+    const errors = [];
+
+    selectedQuestions.forEach((q, index) => {
+        const options = document.getElementsByName(`question-${index}`);
+        let answeredCorrectly = false;
+        options.forEach(option => {
+            if (option.checked && parseInt(option.value, 10) === q.correct) {
+                answeredCorrectly = true;
+            }
+        });
+
+        if (answeredCorrectly) {
+            correctCount++;
+        } else {
+            errors.push({ question: q.question, userAnswer: q.options[userAnswers[index]], correctAnswer: q.options[q.correct] });
+        }
+    });
+
+    const resultContainer = document.getElementById('result');
+    resultContainer.innerHTML = `Правильных ответов: ${correctCount} из ${selectedQuestions.length}`;
+
+    if (correctCount === selectedQuestions.length) {
+        handleAllAnswersChecked();
+    } else {
+        const errorList = document.createElement('ul');
+        errors.forEach(error => {
+            const errorItem = document.createElement('li');
+            errorItem.innerHTML = `Вопрос: ${error.question}<br>Ваш ответ: ${error.userAnswer}<br>Правильный ответ: ${error.correctAnswer}`;
+            errorList.appendChild(errorItem);
+        });
+        resultContainer.appendChild(errorList);
+    }
+}
+
