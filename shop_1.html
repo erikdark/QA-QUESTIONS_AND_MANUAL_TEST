@@ -147,6 +147,7 @@
         }
 
         .error-message {
+            display: none; /* Скрыть сообщения об ошибках */
             color: red;
             font-size: 0.9rem;
             margin-top: 5px;
@@ -216,6 +217,7 @@
 <body>
     <header>
         <h1>Добро пожаловать в наш магазин</h1>
+        <button id="cartButton" onclick="openCartModal()">Корзина</button>
     </header>
 
     <main>
@@ -224,7 +226,7 @@
                 <img src="https://placehold.jp/150x150.png" alt="Товар 1">
                 <h3>Товар 1</h3>
                 <p>Описание товара 1</p>
-                <p class="price">Цена: $50</p>
+                <p class="price">$50</p>
                 <button onclick="addToCart(1)">Добавить в корзину</button>
             </div>
 
@@ -232,7 +234,7 @@
                 <img src="https://placehold.jp/150x150.png" alt="Товар 2">
                 <h3>Товар 2</h3>
                 <p>Описание товара 2</p>
-                <p class="price">Цена: $30</p>
+                <p class="price">$30</p>
                 <button onclick="addToCart(2)">Добавить в корзину</button>
             </div>
 
@@ -240,7 +242,7 @@
                 <img src="https://placehold.jp/150x150.png" alt="Товар 3">
                 <h3>Товар 3</h3>
                 <p>Описание товара 3</p>
-                <p class="price">Цена: $40</p>
+                <p class="price">$40</p>
                 <button onclick="addToCart(3)">Добавить в корзину</button>
             </div>
 
@@ -248,7 +250,7 @@
                 <img src="https://placehold.jp/150x150.png" alt="Товар 4">
                 <h3>Товар 4</h3>
                 <p>Описание товара 4</p>
-                <p class="price">Цена: $25</p>
+                <p class="price">$25</p>
                 <button onclick="addToCart(4)">Добавить в корзину</button>
             </div>
 
@@ -256,7 +258,7 @@
                 <img src="https://placehold.jp/150x150.png" alt="Товар 5">
                 <h3>Товар 5</h3>
                 <p>Описание товара 5</p>
-                <p class="price">Цена: $35</p>
+                <p class="price">$35</p>
                 <button onclick="addToCart(5)">Добавить в корзину</button>
             </div>
         </section>
@@ -282,9 +284,6 @@
                 <div class="checkout-form">
                     <h2>Оформление заказа</h2>
                     <form id="orderForm" onsubmit="return validateForm()">
-                        <label for="name">Имя:</label>
-                        <input type="text" id="name" name="name" required><br><br>
-
                         <label for="email">Email:</label>
                         <input type="email" id="email" name="email" required>
                         <span id="emailError" class="error-message"></span><br><br>
@@ -327,9 +326,15 @@
             cartItems.push(productId);
             updateCartModal();
             showNotification();
+            updateCartButton();
         }
 
         function removeCartItem(productId) {
+            // Ошибка: Один из товаров не удаляется из корзины.
+            if (productId === 4) {
+                return;
+            }
+
             const index = cartItems.indexOf(productId);
             if (index === -1) {
                 // Критическая ошибка №2: Нельзя удалить товар из корзины, который не был ранее добавлен.
@@ -358,26 +363,19 @@
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (!emailPattern.test(email)) {
-                document.getElementById('emailError').textContent = "Некорректный email адрес.";
+                // Ошибка №1: Некорректный email адрес.
                 return false;
-            } else {
-                document.getElementById('emailError').textContent = "";
             }
 
             if (!policy) {
-                document.getElementById('policyError').textContent = "Необходимо согласиться с политикой персональных данных.";
+                // Ошибка №2: Необходимо согласиться с политикой персональных данных.
                 return false;
-            } else {
-                document.getElementById('policyError').textContent = "";
             }
 
             const orderStatus = document.getElementById('orderStatus');
             orderStatus.textContent = "Вы успешно оформили заказ!";
             return false;
         }
-
-        const cartModal = document.getElementById('cartModal');
-        const checkoutModal = document.getElementById('checkoutModal');
 
         function openCartModal() {
             cartModal.style.display = 'block';
@@ -436,6 +434,11 @@
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
+        }
+
+        function updateCartButton() {
+            const cartButton = document.getElementById('cartButton');
+            cartButton.style.display = 'block';
         }
     </script>
 </body>
