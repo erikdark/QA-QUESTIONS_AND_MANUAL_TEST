@@ -61,6 +61,11 @@
             font-size: 0.9rem;
         }
 
+        .product-item .price {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
         .cart {
             background-color: #f0f0f0;
             padding: 20px;
@@ -126,6 +131,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         .checkout-form button:hover {
@@ -199,6 +205,12 @@
             display: none;
             z-index: 999;
         }
+
+        .coupon-message {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -208,38 +220,43 @@
 
     <main>
         <section class="product">
-            <div class="product-item">
+            <div class="product-item" id="product1">
                 <img src="https://placehold.jp/150x150.png" alt="Товар 1">
                 <h3>Товар 1</h3>
                 <p>Описание товара 1</p>
+                <p class="price">Цена: $50</p>
                 <button onclick="addToCart(1)">Добавить в корзину</button>
             </div>
 
-            <div class="product-item">
+            <div class="product-item" id="product2">
                 <img src="https://placehold.jp/150x150.png" alt="Товар 2">
                 <h3>Товар 2</h3>
                 <p>Описание товара 2</p>
+                <p class="price">Цена: $30</p>
                 <button onclick="addToCart(2)">Добавить в корзину</button>
             </div>
 
-            <div class="product-item">
+            <div class="product-item" id="product3">
                 <img src="https://placehold.jp/150x150.png" alt="Товар 3">
                 <h3>Товар 3</h3>
                 <p>Описание товара 3</p>
+                <p class="price">Цена: $40</p>
                 <button onclick="addToCart(3)">Добавить в корзину</button>
             </div>
 
-            <div class="product-item">
+            <div class="product-item" id="product4">
                 <img src="https://placehold.jp/150x150.png" alt="Товар 4">
                 <h3>Товар 4</h3>
                 <p>Описание товара 4</p>
+                <p class="price">Цена: $25</p>
                 <button onclick="addToCart(4)">Добавить в корзину</button>
             </div>
 
-            <div class="product-item">
+            <div class="product-item" id="product5">
                 <img src="https://placehold.jp/150x150.png" alt="Товар 5">
                 <h3>Товар 5</h3>
                 <p>Описание товара 5</p>
+                <p class="price">Цена: $35</p>
                 <button onclick="addToCart(5)">Добавить в корзину</button>
             </div>
         </section>
@@ -253,6 +270,8 @@
                         <!-- Содержимое корзины будет добавляться программно -->
                     </div>
                     <button onclick="applyCoupon()">Применить купон</button>
+                    <span id="couponMessage" class="coupon-message"></span>
+                    <button onclick="openCheckoutModal()">Оформить заказ</button>
                 </div>
             </div>
         </div>
@@ -263,16 +282,16 @@
                 <div class="checkout-form">
                     <h2>Оформление заказа</h2>
                     <form id="orderForm" onsubmit="return validateForm()">
-                        <label for="fullName">ФИО:</label>
-                        <input type="text" id="fullName" name="fullName" required><br><br>
-                        
+                        <label for="name">Имя:</label>
+                        <input type="text" id="name" name="name" required><br><br>
+
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required><br>
-                        <span id="emailError" class="error-message"></span><br>
-                        
+                        <input type="email" id="email" name="email" required>
+                        <span id="emailError" class="error-message"></span><br><br>
+
                         <label for="phone">Телефон:</label>
                         <input type="tel" id="phone" name="phone" required><br><br>
-                        
+
                         <label for="policy">Согласен с политикой персональных данных:</label>
                         <input type="checkbox" id="policy" name="policy" required>
                         <span id="policyError" class="error-message"></span><br><br>
@@ -327,7 +346,8 @@
                 return;
             }
 
-            alert("Купон применен!");
+            const discount = 0.1; // 10% скидка
+            document.getElementById('couponMessage').textContent = `Купон активирован: скидка ${discount * 100}%`;
         }
 
         function validateForm() {
