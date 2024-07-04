@@ -186,6 +186,19 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
@@ -266,44 +279,41 @@
                         </label>
                         <span id="policyError" class="error-message"></span><br><br>
                         
-                        <input type="submit" value="Заказать">
+                        <button type="submit">Оформить заказ</button>
                     </form>
                     <div id="orderStatus"></div>
                 </div>
             </div>
         </div>
+
+        <div class="notification" id="addToCartNotification">Товар добавлен в корзину</div>
+
     </main>
 
-    <footer>
-        <p>&copy; 2024 Наш магазин. Все права защищены.</p>
-    </footer>
-
     <script>
-        // Массив для хранения товаров в корзине
         let cartItems = [];
 
-        // Функция добавления товара в корзину
         function addToCart(productId) {
-            // Критическая ошибка №1: Один из 5 товаров не добавляется в корзину при нажатии на кнопку.
             if (productId === 1) {
+                // Критическая ошибка №1: Один из 5 товаров не добавляется в корзину при нажатии на кнопку.
                 return;
             }
 
-            // Высокоприоритетная ошибка: Нельзя добавить больше 3 экземпляров одного товара в корзину.
             const itemCount = cartItems.filter(item => item === productId).length;
             if (itemCount >= 3) {
+                // Высокоприоритетная ошибка: Нельзя добавить больше 3 экземпляров одного товара в корзину.
                 return;
             }
 
             cartItems.push(productId);
             updateCartModal();
+            showNotification();
         }
 
-        // Функция удаления товара из корзины
         function removeCartItem(productId) {
-            // Критическая ошибка №2: Нельзя удалить товар из корзины, который не был ранее добавлен.
             const index = cartItems.indexOf(productId);
             if (index === -1) {
+                // Критическая ошибка №2: Нельзя удалить товар из корзины, который не был ранее добавлен.
                 return;
             }
 
@@ -311,17 +321,15 @@
             updateCartModal();
         }
 
-        // Функция применения купона на скидку
         function applyCoupon() {
-            // Высокоприоритетная ошибка: Применение купона не работает, если в корзине нет хотя бы одного товара.
             if (cartItems.length === 0) {
+                // Высокоприоритетная ошибка: Применение купона не работает, если в корзине нет хотя бы одного товара.
                 return;
             }
 
             alert("Купон применен!");
         }
 
-        // Функция валидации формы заказа
         function validateForm() {
             const form = document.getElementById('orderForm');
             const email = form.email.value;
@@ -329,7 +337,6 @@
 
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            // Высокоприоритетная ошибка: Не верная валидация поля для email
             if (!emailPattern.test(email)) {
                 document.getElementById('emailError').textContent = "Некорректный email адрес.";
                 return false;
@@ -337,7 +344,6 @@
                 document.getElementById('emailError').textContent = "";
             }
 
-            // Обычная ошибка: Отсутствует проверка на галочку о политике персональных данных
             if (!policy) {
                 document.getElementById('policyError').textContent = "Необходимо согласиться с политикой персональных данных.";
                 return false;
@@ -345,13 +351,11 @@
                 document.getElementById('policyError').textContent = "";
             }
 
-            // Подтверждение успешного оформления заказа
             const orderStatus = document.getElementById('orderStatus');
             orderStatus.textContent = "Вы успешно оформили заказ!";
-            return false; // Для примера, обычно здесь должна быть отправка формы на сервер
+            return false;
         }
 
-        // JavaScript для модальных окон
         const cartModal = document.getElementById('cartModal');
         const checkoutModal = document.getElementById('checkoutModal');
 
@@ -371,7 +375,6 @@
             checkoutModal.style.display = 'none';
         }
 
-        // Закрыть модальное окно при клике вне его
         window.onclick = function(event) {
             if (event.target == cartModal) {
                 closeCartModal();
@@ -380,7 +383,6 @@
             }
         }
 
-        // Обновление содержимого модального окна корзины
         function updateCartModal() {
             const cartItemsContainer = document.getElementById('cartItems');
             cartItemsContainer.innerHTML = '';
@@ -405,6 +407,15 @@
                 itemDiv.appendChild(removeBtn);
                 cartItemsContainer.appendChild(itemDiv);
             });
+        }
+
+        function showNotification() {
+            const notification = document.getElementById('addToCartNotification');
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
     </script>
 </body>
