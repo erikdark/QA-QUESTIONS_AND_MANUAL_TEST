@@ -116,5 +116,17 @@ function checkAnswers() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', displayQuestions);
+function getRandomShopLink() {
+    const links = ['shop_1.html', 'shop_2.html', 'shop_3.html'];
+    const randomIndex = Math.floor(Math.random() * links.length);
+    return links[randomIndex];
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Вставляем функцию для случайного выбора ссылки перед загрузкой вопросов
+    const randomShopLink = getRandomShopLink();
+    // Далее вызываем функцию для отображения вопросов
+    displayQuestions();
+});
+
 document.getElementById('submit').addEventListener('click', submitAnswers);
