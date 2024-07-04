@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Магазин - Тестовая страница с ошибками</title>
+    <title>Магазин - Тестовая страница 2</title>
     <style>
         /* Стили для примера */
         body {
@@ -281,168 +281,150 @@
                 <div class="checkout-form">
                     <h2>Оформление заказа</h2>
                     <form id="orderForm" onsubmit="return validateForm()">
-                        <label for="name">Имя:</label>
+                                                <label for="name">Имя:</label>
                         <input type="text" id="name" name="name" required>
-                        <div class="error-message" id="nameError"></div>
 
                         <label for="email">Email:</label>
                         <input type="email" id="email" name="email" required>
-                        <div class="error-message" id="emailError"></div>
 
-                        <label for="address">Адрес:</label>
-                        <textarea id="address" name="address" required></textarea>
-                        <div class="error-message" id="addressError"></div>
+                        <div class="policy">
+                            <input type="checkbox" id="policy" name="policy">
+                            <label for="policy">Я согласен с политикой конфиденциальности</label>
+                            <!-- Удалена валидация чекбокса -->
+                        </div>
 
-                        <button type="submit">Подтвердить заказ</button>
+                        <button type="submit">Отправить</button>
                     </form>
-                    <div class="policy">
-                        <input type="checkbox" id="policy" required>
-                        <label for="policy">Я согласен с политикой конфиденциальности</label>
-                        <div class="error-message" id="policyError"></div>
-                    </div>
                 </div>
             </div>
         </div>
+
+        <div id="errorModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeErrorModal()">&times;</span>
+                <h2>Ошибка 500</h2>
+                <p>Произошла внутренняя ошибка сервера.</p>
+            </div>
+        </div>
+
+        <div id="notification" class="notification"></div>
     </main>
 
-    <div class="notification" id="notification">
-        <p id="notificationMessage"></p>
-    </div>
-
     <script>
-        // Модальные окна
-        const cartModal = document.getElementById('cartModal');
-        const checkoutModal = document.getElementById('checkoutModal');
-        const notification = document.getElementById('notification');
+        let cart = [];
 
-        // Открыть корзину
-        function openCartModal() {
-            cartModal.style.display = 'block';
-        }
-
-        // Закрыть корзину
-        function closeCartModal() {
-            cartModal.style.display = 'none';
-        }
-
-        // Открыть оформление заказа
-        function openCheckoutModal() {
-            checkoutModal.style.display = 'block';
-        }
-
-        // Закрыть оформление заказа
-        function closeCheckoutModal() {
-            checkoutModal.style.display = 'none';
-        }
-
-        // Добавить товар в корзину
         function addToCart(productId) {
-            // Пример добавления товара в корзину
-            const cartItems = document.getElementById('cartItems');
-            const totalPrice = document.getElementById('totalPrice');
+            const product = {
+                id: productId,
+                name: document.querySelector(`#product${productId} h3`).textContent,
+                price: parseFloat(document.querySelector(`#product${productId} .price`).textContent.replace('$', '')),
+                quantity: 1
+            };
 
-            const product = document.getElementById('product' + productId);
-            const productName = product.querySelector('h3').textContent;
-            const productPrice = parseFloat(product.querySelector('.price').textContent.replace('$', ''));
+            const existingProduct = cart.find(item => item.id === productId);
+            if (existingProduct) {
+                existingProduct.quantity++;
+            } else {
+                cart.push(product);
+            }
 
-            const cartItem = document.createElement('div');
-            cartItem.classList.add('cart-item');
-            cartItem.innerHTML = `
-                <img src="https://placehold.jp/150x150.png" alt="${productName}">
-                <p>${productName}</p>
-                <p>$${productPrice}</p>
-                <button onclick="removeFromCart(${productId})">Удалить</button>
-            `;
-
-            cartItems.appendChild(cartItem);
-
-            // Обновление общей суммы
-            let currentTotal = parseFloat(totalPrice.textContent);
-            currentTotal += productPrice;
-            totalPrice.textContent = currentTotal.toFixed(2);
+            if (cart.length >= 15) {
+                openErrorModal();
+            } else {
+                updateCart();
+            }
         }
 
-        // Удалить товар из корзины
-        function removeFromCart(productId) {
-            // Пример удаления товара из корзины
-            const cartItems = document.getElementById('cartItems');
-            const totalPrice = document.getElementById('totalPrice');
+        function updateCart() {
+            const cartItemsElement = document.getElementById('cartItems');
+            cartItemsElement.innerHTML = '';
 
-            const product = document.getElementById('product' + productId);
-            const productPrice = parseFloat(product.querySelector('.price').textContent.replace('$', ''));
+            cart.forEach((item, index) => {
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <p>${item.name}</p>
+                    <p>$${item.price} x ${item.quantity}</p>
+                    <button onclick="removeFromCart(${index})">Удалить</button>
+                `;
+                cartItemsElement.appendChild(cartItem);
+            });
 
-            // Удаление соответствующего элемента из DOM
-            cartItems.removeChild(cartItems.lastElementChild);
-
-            // Обновление общей суммы
-            let currentTotal = parseFloat(totalPrice.textContent);
-            currentTotal -= productPrice;
-            totalPrice.textContent = currentTotal.toFixed(2);
+            const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+            document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
         }
 
-        // Применить купон
+        function removeFromCart(index) {
+            cart[index].quantity--;
+
+            if (cart[index].quantity <= 0) {
+                if (cart.length > 1) {
+                    cart.splice(index, 1); // Только один элемент останется, не удаляя его
+                }
+            }
+
+            updateCart();
+        }
+
         function applyCoupon() {
-            const couponMessage = document.getElementById('couponMessage');
-            couponMessage.textContent = 'Скидка 10% применена';
+            const totalPriceElement = document.getElementById('totalPrice');
+            let totalPrice = parseFloat(totalPriceElement.textContent);
+
+            totalPrice *= 0.90; // Применение 10% скидки
+            document.getElementById('couponMessage').textContent = 'Купон применен, скидка 50%'; // Неправильное сообщение
+            totalPriceElement.textContent = totalPrice.toFixed(2);
         }
 
-        // Валидация формы оформления заказа
         function validateForm() {
+            // Валидация формы (кроме чекбокса)
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const policy = document.getElementById('policy').checked;
 
-            let isValid = true;
-
-            // Валидация имени
-            const nameError = document.getElementById('nameError');
-            if (!/^[a-zA-Zа-яА-ЯёЁ-]+$/.test(name)) {
-                nameError.textContent = 'Имя должно содержать только буквы и символ "-"';
-                isValid = false;
-            } else {
-                nameError.textContent = '';
+            if (!name || !email) {
+                showNotification('Пожалуйста, заполните все поля.');
+                return false;
             }
 
-            // Валидация email
-            const emailError = document.getElementById('emailError');
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                emailError.textContent = 'Введите корректный email';
-                isValid = false;
-            } else {
-                emailError.textContent = '';
-            }
+            // Валидация чекбокса не выполняется
 
-            // Валидация адреса
-            const addressError = document.getElementById('addressError');
-            if (address.length === 0) {
-                addressError.textContent = 'Введите адрес доставки';
-                isValid = false;
-            } else {
-                addressError.textContent = '';
-            }
-
-            // Подтверждение политики конфиденциальности
-            const policyError = document.getElementById('policyError');
-            if (!policy) {
-                policyError.textContent = 'Необходимо согласиться с политикой конфиденциальности';
-                isValid = false;
-            } else {
-                policyError.textContent = '';
-            }
-
-            return isValid;
+            showNotification('Форма успешно отправлена.');
+            return true;
         }
 
-        // Уведомления
         function showNotification(message) {
-            notification.querySelector('#notificationMessage').textContent = message;
-            notification.style.display = 'block';
+            const notificationElement = document.getElementById('notification');
+            notificationElement.textContent = message;
+            notificationElement.style.display = 'block';
 
             setTimeout(() => {
-                notification.style.display = 'none';
+                notificationElement.style.display = 'none';
             }, 3000);
+        }
+
+        function openCartModal() {
+            document.getElementById('cartModal').style.display = 'block';
+        }
+
+        function closeCartModal() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function openCheckoutModal() {
+            document.getElementById('checkoutModal').style.display = 'block';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').style.display = 'none';
+        }
+
+        function openErrorModal() {
+            document.getElementById('errorModal').style.display = 'block';
+        }
+
+        function closeErrorModal() {
+            document.getElementById('errorModal').style.display = 'none';
         }
     </script>
 </body>
 </html>
+
