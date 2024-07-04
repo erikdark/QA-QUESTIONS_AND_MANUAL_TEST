@@ -25,97 +25,77 @@ const questions = [
     { question: "Что такое Exploratory Testing?", options: ["A. Тестирование производительности", "B. Тестирование системы без заранее подготовленных сценариев", "C. Тестирование безопасности", "D. Тестирование интерфейсов"], correct: 1 },
     { question: "Какой инструмент используется для автоматизации тестирования?", options: ["A. JUnit", "B. Selenium", "C. JMeter", "D. Postman"], correct: 1 },
     { question: "Что такое Alpha Testing?", options: ["A. Тестирование системой перед релизом", "B. Тестирование системы после релиза", "C. Тестирование производительности", "D. Тестирование безопасности"], correct: 0 },
-    { question: "Что такое Beta Testing?", options: ["A. Тестирование системой перед релизом", "B. Тестирование системы после релиза пользователями", "C. Тестирование производительности", "D. Тестирование безопасности"], correct: 1 },
-    { question: "Что такое Static Testing?", options: ["A. Тестирование без выполнения кода", "B. Тестирование производительности", "C. Тестирование безопасности", "D. Тестирование интерфейсов"], correct: 0 }
+    { question: "Какой из следующих методов тестирования оценивает надежность системы?", options: ["A. Load Testing", "B. Smoke Testing", "C. Reliability Testing", "D. Security Testing"], correct: 2 },
+    { question: "Что такое Integration Testing?", options: ["A. Тестирование отдельных модулей", "B. Тестирование взаимодействия между модулями", "C. Тестирование производительности", "D. Тестирование интерфейсов"], correct: 1 },
+    { question: "Какой метод тестирования помогает выявить проблемы безопасности в системе?", options: ["A. White Box Testing", "B. Black Box Testing", "C. Penetration Testing", "D. Regression Testing"], correct: 2 },
 ];
 
-
 let selectedQuestions = [];
-let userAnswers = [];
 
 function getRandomQuestions() {
-    let shuffled = questions.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 15);
+    const shuffled = questions.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 5); // Выберем первые 5 случайных вопросов
 }
 
 function displayQuestions() {
     selectedQuestions = getRandomQuestions();
     const questionContainer = document.getElementById('questions');
+    questionContainer.innerHTML = ''; // Очистим содержимое контейнера перед отображением новых вопросов
+    
     selectedQuestions.forEach((q, index) => {
         const questionDiv = document.createElement('div');
         questionDiv.className = 'question-container';
         
         const questionTitle = document.createElement('div');
         questionTitle.className = 'question';
-        questionTitle.textContent = q.question;
+        questionTitle.textContent = `${index + 1}. ${q.question}`; // Нумерация вопросов
         questionDiv.appendChild(questionTitle);
         
         const optionsList = document.createElement('ul');
         optionsList.className = 'options';
+        
         q.options.forEach((option, optIndex) => {
             const optionItem = document.createElement('li');
             const optionInput = document.createElement('input');
             optionInput.type = 'radio';
             optionInput.name = `question-${index}`;
-            optionInput.value = optIndex;
+            optionInput.value = optIndex; // Используем индекс начиная с 0 для значений
             optionItem.appendChild(optionInput);
             optionItem.appendChild(document.createTextNode(option));
             optionsList.appendChild(optionItem);
         });
+        
         questionDiv.appendChild(optionsList);
         questionContainer.appendChild(questionDiv);
     });
 }
 
-function submitAnswers() {
-    userAnswers = [];
-    selectedQuestions.forEach((q, index) => {
-        const options = document.getElementsByName(`question-${index}`);
-        options.forEach(option => {
-            if (option.checked) {
-                userAnswers.push(parseInt(option.value, 10));
-            }
-        });
-    });
-
-    if (userAnswers.length < selectedQuestions.length) {
-        alert("Вы ответили не на все вопросы.");
-        return;
-    }
-
-    checkAnswers();
-}
-
 function checkAnswers() {
-    let correctCount = 0;
-    const errors = [];
-
+    let score = 0;
     selectedQuestions.forEach((q, index) => {
-        if (userAnswers[index] === q.correct) {
-            correctCount++;
-        } else {
-            errors.push({ question: q.question, userAnswer: q.options[userAnswers[index]], correctAnswer: q.options[q.correct] });
+        const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
+        if (selectedOption) {
+            const selectedValue = parseInt(selectedOption.value, 10); // Получаем выбранное значение как число
+            if (selectedValue === q.correct) {
+                score++;
+            }
         }
     });
 
-    const resultContainer = document.getElementById('result');
-    resultContainer.innerHTML = `Правильных ответов: ${correctCount} из ${selectedQuestions.length}`;
-    
-    if (correctCount < 15) {
-        const errorList = document.createElement('ul');
-        errors.forEach(error => {
-            const errorItem = document.createElement('li');
-            errorItem.innerHTML = `Вопрос: ${error.question}<br>Ваш ответ: ${error.userAnswer}<br>Правильный ответ: ${error.correctAnswer}`;
-            errorList.appendChild(errorItem);
-        });
-        resultContainer.appendChild(errorList);
-    } else {
-        const practicalTestButton = document.createElement('button');
-        practicalTestButton.textContent = 'Начать практический тест';
-        practicalTestButton.onclick = () => alert('Практический тест начат!');
-        resultContainer.appendChild(practicalTestButton);
-    }
+    const scoreContainer = document.getElementById('score');
+    scoreContainer.textContent = `Правильных ответов: ${score} из ${selectedQuestions.length}`;
 }
 
-document.addEventListener('DOMContentLoaded', displayQuestions);
-document.getElementById('submit').addEventListener('click', submitAnswers);
+// Используем кнопки для запуска функций
+const startButton = document.getElementById('startButton');
+const checkButton = document.getElementById('checkButton');
+
+startButton.addEventListener('click', () => {
+    displayQuestions();
+    startButton.disabled = true; // Блокируем кнопку "Start"
+    checkButton.disabled = false; // Разблокируем кнопку "Check Answers"
+});
+
+checkButton.addEventListener('click', () => {
+    checkAnswers();
+});
