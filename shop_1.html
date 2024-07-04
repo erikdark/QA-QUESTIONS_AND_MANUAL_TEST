@@ -113,7 +113,8 @@
         }
 
         .checkout-form input[type="text"],
-        .checkout-form input[type="email"] {
+        .checkout-form input[type="email"],
+        .checkout-form input[type="tel"] {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
@@ -290,12 +291,14 @@
                         <input type="email" id="email" name="email"><br><br>
 
                         <label for="phone">Телефон:</label>
-                        <input type="tel" id="phone" name="phone"><br><br>
+                        <input type="tel" id="phone" name="phone" placeholder="+7 (___) ___-____" pattern="\+7 \([0-9]{3}\) [0-9]{3}-[0-9]{4}"><br><br>
 
                         <input type="checkbox" id="policy" name="policy">
                         <label for="policy">Согласен с политикой персональных данных</label><br><br>
 
                         <button type="submit">Оформить заказ</button>
+                        <button type="button" onclick="applyCoupon()">Применить купон</button>
+                        <p class="coupon-message" id="couponMessage"></p>
                     </form>
                     <div id="orderStatus"></div>
                 </div>
@@ -346,18 +349,8 @@
         }
 
         function applyCoupon() {
-            if (cartItems.length === 0) {
-                // Высокоприоритетная ошибка: Применение купона не работает, если в корзине нет хотя бы одного товара.
-                return;
-            }
-
-            // Текст сообщения о купоне
-            const couponMessage = document.createElement('p');
-            couponMessage.classList.add('coupon-message');
+            const couponMessage = document.getElementById('couponMessage');
             couponMessage.textContent = 'Купон активирован: скидка 10%';
-
-            const checkoutForm = document.getElementById('orderForm');
-            checkoutForm.appendChild(couponMessage);
         }
 
         function validateForm() {
