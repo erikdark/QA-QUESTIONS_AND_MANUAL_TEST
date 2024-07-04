@@ -5,33 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест по теории тестирования</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
         .question-container {
             margin-bottom: 20px;
         }
         .question {
-            font-size: 18px;
+            font-weight: bold;
         }
         .options {
             list-style-type: none;
             padding: 0;
         }
         .options li {
-            margin: 5px 0;
-        }
-        .hidden {
-            display: none;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
-    <div id="quiz-container">
-        <div id="questions"></div>
-        <button id="submit-btn" onclick="submitAnswers()">Submit</button>
-        <div id="result" class="hidden"></div>
-    </div>
+    <div id="questions"></div>
+    <button id="submit">Отправить ответы</button>
+    <div id="result"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
