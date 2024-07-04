@@ -273,10 +273,8 @@
                         <label for="phone">Телефон:</label>
                         <input type="tel" id="phone" name="phone" required><br><br>
                         
-                        <label>
-                            <input type="checkbox" id="policy" name="policy" required>
-                            Я согласен с политикой персональных данных
-                        </label>
+                        <label for="policy">Согласен с политикой персональных данных:</label>
+                        <input type="checkbox" id="policy" name="policy" required>
                         <span id="policyError" class="error-message"></span><br><br>
                         
                         <button type="submit">Оформить заказ</button>
@@ -286,8 +284,10 @@
             </div>
         </div>
 
-        <div class="notification" id="addToCartNotification">Товар добавлен в корзину</div>
-
+        <div class="notification" id="addToCartNotification">
+            Товар добавлен в корзину
+            <button onclick="openCartModal()">Корзина</button>
+        </div>
     </main>
 
     <script>
