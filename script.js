@@ -29,6 +29,7 @@ const questions = [
     { question: "Что такое Static Testing?", options: ["A. Тестирование без выполнения кода", "B. Тестирование производительности", "C. Тестирование безопасности", "D. Тестирование интерфейсов"], correct: 0 }
 ];
 
+
 let selectedQuestions = [];
 let userAnswers = [];
 
