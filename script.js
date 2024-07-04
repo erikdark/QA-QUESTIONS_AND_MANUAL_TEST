@@ -111,10 +111,14 @@ function checkAnswers() {
     } else {
         const practicalTestButton = document.createElement('button');
         practicalTestButton.textContent = 'Начать практический тест';
-        practicalTestButton.onclick = () => alert('Практический тест начат!');
+        practicalTestButton.onclick = () => {
+            const randomShopLink = getRandomShopLink();
+            window.location.href = randomShopLink;
+        };
         resultContainer.appendChild(practicalTestButton);
     }
 }
+
 
 function getRandomShopLink() {
     const links = ['shop_1.html', 'shop_2.html', 'shop_3.html'];
